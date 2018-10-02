@@ -20,6 +20,7 @@ public class BallManager : MonoBehaviour {
 	private bool isIn = false;
 	private bool canChangeCol = true;
 
+
 	// Use this for initialization
 	void Start () {
 		canvasScore = GameObject.Find("CanvasScore");
@@ -78,19 +79,24 @@ public class BallManager : MonoBehaviour {
 
 	void Point(Collider2D col){
 		//Debug.Log ("point");
+		//ゴールを削除
+		/*
 		if(col.transform.parent.parent.gameObject.tag == "MoveGoal"){
 			Destroy(col.transform.parent.parent.gameObject);
 		}else{
 			Destroy(col.transform.parent.gameObject);
 		}
+		*/
 		//ポイント反映
 		camera.GetComponent<GameManager> ().UpdateScore (1);
-		camera.GetComponent<GameManager> ().CreateGoal ();
+		//camera.GetComponent<GameManager> ().CreateGoal ();
 
 		//コンボテキスト関係
 		textCombo.GetComponent<Text>().text = "+1";
 		textCombo.GetComponent<Text>().color = new Color(176f/255,0,1,147f/255);
 		textCombo.SetActive(true);
+
+		camera.GetComponent<GameManager>().PointSE();
 
 		//ボールをDestroy
 		Destroy(this.gameObject);
@@ -158,6 +164,8 @@ public class BallManager : MonoBehaviour {
 		float speed = Mathf.Lerp(minVel,maxVel,ratio);
 
 		GetComponent<Rigidbody2D>().velocity = transform.up * speed;
+
+		camera.GetComponent<GameManager>().JumpSE();
 
 		//トランポリンを削除
 		Destroy (col.gameObject);

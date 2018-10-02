@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	public AudioClip jumpSE;
+	public AudioClip pointSE;
+	public AudioSource audioSource;
 	public GameObject[] itemPrefab = new GameObject[3];
 	public GameObject addballPregab;
 	public GameObject ballPrefab;
@@ -19,6 +22,7 @@ public class GameManager : MonoBehaviour {
 	private GameObject drawLine;
 	private GameObject textScore;
 	private float timeSpan = 5.0f;
+	private float goalTimeSpan = 20.0f;
 	private float itemTimeSpan = 5.0f;
 	private bool gamefinish = false;
 	private int point = 0;
@@ -32,6 +36,7 @@ public class GameManager : MonoBehaviour {
 		Create();
 		Create();
 
+		Invoke("GoalSpan",goalTimeSpan);
 		Invoke("CreateAddBall",timeSpan);
 		//Invoke("CreateItem",5);
 	}
@@ -45,10 +50,24 @@ public class GameManager : MonoBehaviour {
 
 		GameObject addball = (GameObject)Instantiate(ballPrefab);
 		//addball.transform.SetParent(basketGoal.transform);
-		addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
+		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
+		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
+		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
 
 		if(!gamefinish){
 			Invoke("CreateAddBall",timeSpan);
+		}
+	}
+
+	private void GoalSpan(){
+		CreateGoal();
+
+		int count = basketGoal.transform.childCount - 1;
+		int target = Random.Range(0,count);
+		Destroy(basketGoal.transform.GetChild(target).gameObject);
+
+		if(!gamefinish){
+			Invoke("GoalSpan",goalTimeSpan);
 		}
 	}
 
@@ -83,7 +102,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void CreateGoal(){
-		Invoke ("Create",1);
+		//Invoke ("Create",1);
+		Create();
 	}
 
 	private void Create(){
@@ -108,6 +128,15 @@ public class GameManager : MonoBehaviour {
 		goal.transform.localPosition = goalPosition[target];
 		goal.GetComponent<GoalManager>().posNum = target;
 		//basketGoal.transform.GetChild (target).gameObject.SetActive (true);
+	}
+
+	//オーディオ
+	public void JumpSE(){
+		audioSource.PlayOneShot(jumpSE);
+	}
+
+	public void PointSE(){
+		audioSource.PlayOneShot(pointSE);
 	}
 
 }
