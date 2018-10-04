@@ -93,7 +93,7 @@ public class BallManager : MonoBehaviour {
 
 		//コンボテキスト関係
 		textCombo.GetComponent<Text>().text = "+1";
-		textCombo.GetComponent<Text>().color = new Color(176f/255,0,1,147f/255);
+		textCombo.GetComponent<Text>().color = new Color(0.95f,1,0,1);
 		textCombo.SetActive(true);
 
 		camera.GetComponent<GameManager>().PointSE();

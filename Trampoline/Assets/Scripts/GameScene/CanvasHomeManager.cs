@@ -20,7 +20,7 @@ public class CanvasHomeManager : MonoBehaviour {
 
 	private void UpdateTextAlfa(float a){
 		Color c = textDraw.GetComponent<TextMeshProUGUI>().color;
-		textDraw.GetComponent<TextMeshProUGUI>().color = new Color(c.r,c.b,c.g,a);
+		textDraw.GetComponent<TextMeshProUGUI>().color = new Color(c.r,c.g,c.b,a);
 	}
 
 	private void FadeInText(){
