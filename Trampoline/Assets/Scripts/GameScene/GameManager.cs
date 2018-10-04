@@ -15,29 +15,24 @@ public class GameManager : MonoBehaviour {
 	public GameObject basketGoal;
 	public GameObject goalPrefab;
 	public GameObject movegoalPrefab;
+	public GameObject textScore;
+	public GameObject canvasHome;
+	public GameObject wall;
 	public Vector3[] goalPosition = new Vector3[5];
 	public int[] goalposCheck = {0,0,0,0,0};
 	public int combo = 0;
 
 	private GameObject drawLine;
-	private GameObject textScore;
 	private float timeSpan = 5.0f;
 	private float goalTimeSpan = 20.0f;
 	private float itemTimeSpan = 5.0f;
 	private bool gamefinish = false;
 	private int point = 0;
+	private int ballCount = 0;
 
 	// Use this for initialization
 	void Start () {
 		drawLine = GameObject.Find ("drawPhysicsLine");
-		textScore = GameObject.Find ("TextScore");
-
-		//最初のゴール生成
-		Create();
-		Create();
-
-		Invoke("GoalSpan",goalTimeSpan);
-		Invoke("CreateAddBall",timeSpan);
 		//Invoke("CreateItem",5);
 	}
 
@@ -46,7 +41,28 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	public void GameStart(){
+
+		canvasHome.SetActive(false);
+		Vector3 wallPos = wall.transform.localPosition;
+		wall.transform.localPosition = new Vector3(wallPos.x,wallPos.y,0);
+
+		textScore.SetActive(true);
+
+		CreateGoal();
+		CreateGoal();
+
+		CreateAddBall();
+
+		Invoke("GoalSpan",goalTimeSpan);
+
+
+	}
+
 	private void CreateAddBall(){
+
+		ballCount++;
+		if(ballCount % 5 == 0)timeSpan = (timeSpan-0.2f > 2) ? timeSpan - 0.2f : 2;
 
 		GameObject addball = (GameObject)Instantiate(ballPrefab);
 		//addball.transform.SetParent(basketGoal.transform);

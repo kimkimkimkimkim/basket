@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BallManager : MonoBehaviour {
 
-	public GameObject goalField;
+	//public GameObject goalField;
 
 	private GameObject canvasScore;
 	private GameObject textCombo;

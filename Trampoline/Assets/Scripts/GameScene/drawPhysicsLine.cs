@@ -10,6 +10,7 @@ public class drawPhysicsLine : MonoBehaviour
 	public float lineWidth = 0.1f;
 	public bool gamefinish = false;
 
+	private GameObject camera;
 	private Vector3 touchPos;
 	private int count = 0;
 	private int maxLineNum = 4;
@@ -17,7 +18,7 @@ public class drawPhysicsLine : MonoBehaviour
 	private bool isCreated = false;
 
 	void Start(){
-
+		camera = GameObject.Find("Main Camera");
 	}
 
 	void Update (){
@@ -55,6 +56,9 @@ public class drawPhysicsLine : MonoBehaviour
 		}
 
 		if (Input.GetMouseButtonUp (0) && isCreated) {
+
+			if(count == 0)camera.GetComponent<GameManager>().GameStart();
+
 			GameObject obj = line.transform.Find ("Line" + count.ToString ()).gameObject;
 			BoxCollider2D[] bCol = obj.GetComponents<BoxCollider2D> ();
 			for (int i = 0; i < bCol.Length; i++) {
