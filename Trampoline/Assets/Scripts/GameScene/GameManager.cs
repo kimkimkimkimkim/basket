@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+public enum PPKey {
+	best,
+}
 
 public class GameManager : MonoBehaviour {
 
@@ -18,7 +23,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject textScore;
 	public GameObject canvasHome;
 	public GameObject wall;
+	public GameObject ballField;
 	public Vector3[] goalPosition = new Vector3[5];
+	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
 	public int combo = 0;
 
@@ -65,7 +72,7 @@ public class GameManager : MonoBehaviour {
 		if(ballCount % 5 == 0)timeSpan = (timeSpan-0.2f > 2) ? timeSpan - 0.2f : 2;
 
 		GameObject addball = (GameObject)Instantiate(ballPrefab);
-		//addball.transform.SetParent(basketGoal.transform);
+		addball.transform.SetParent(ballField.transform);
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
 		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
 		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
@@ -104,10 +111,19 @@ public class GameManager : MonoBehaviour {
 
 
 		//GameOverUIを表示
+		int score = int.Parse(textScore.GetComponent<Text>().text);
+		int best = PlayerPrefs.GetInt(PPKey.best.ToString());
+		if(score > best)best = score;
+		PlayerPrefs.SetInt(PPKey.best.ToString(), best);
+
 		gameoverView.SetActive(true);
-		gameoverView.transform.Find("TextScore").GetChild(0).GetComponent<Text>().text
-			= textScore.GetComponent<Text>().text;
+		gameoverView.transform.Find("TextScore").GetChild(0).GetComponent<TextMeshProUGUI>().text
+			= score.ToString();
+		gameoverView.transform.Find("TextHighScore").GetChild(0).GetComponent<TextMeshProUGUI>().text
+			= best.ToString();
 		iTween.MoveFrom(gameoverView,iTween.Hash("x",-2));
+
+		CancelInvoke();
 
 		textScore.SetActive(false);
 	}
