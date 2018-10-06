@@ -23,9 +23,5 @@ public class GameOver : MonoBehaviour {
 			maincamera.GetComponent<GameManager> ().GameOver ();
 			count++;
 		}
-
-		if(col.gameObject.tag == "AddBall"){
-			maincamera.GetComponent<GameManager> ().combo = 0;
-		}
 	}
 }

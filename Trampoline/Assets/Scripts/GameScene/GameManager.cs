@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject canvasHome;
 	public GameObject wall;
 	public GameObject ballField;
+	public GameObject feverBlack;
+	public GameObject neon;
 	public Vector3[] goalPosition = new Vector3[5];
 	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
@@ -33,9 +35,13 @@ public class GameManager : MonoBehaviour {
 	private float timeSpan = 5.0f;
 	private float goalTimeSpan = 20.0f;
 	private float itemTimeSpan = 5.0f;
+	private float feverBallSpan = 0.5f;
+	private float feverTime = 10.0f;
 	private bool gamefinish = false;
 	private int point = 0;
 	private int ballCount = 0;
+	private int feverCount = 0;
+	private int maxFeverCount = 10;
 
 	// Use this for initialization
 	void Start () {
@@ -59,14 +65,13 @@ public class GameManager : MonoBehaviour {
 		CreateGoal();
 		CreateGoal();
 
-		CreateAddBall();
+		CreateBall();
 
 		Invoke("GoalSpan",goalTimeSpan);
 
-
 	}
 
-	private void CreateAddBall(){
+	private void CreateBall(){
 
 		ballCount++;
 		if(ballCount % 5 == 0)timeSpan = (timeSpan-0.2f > 2) ? timeSpan - 0.2f : 2;
@@ -78,20 +83,37 @@ public class GameManager : MonoBehaviour {
 		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
 
 		if(!gamefinish){
-			Invoke("CreateAddBall",timeSpan);
+			Invoke("CreateBall",timeSpan);
+		}
+	}
+
+	private void CreateAddBall(){
+
+		GameObject addball = (GameObject)Instantiate(addballPregab);
+		addball.transform.SetParent(ballField.transform);
+		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
+		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
+		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
+
+		if(!gamefinish){
+			Invoke("CreateAddBall",feverBallSpan);
 		}
 	}
 
 	private void GoalSpan(){
 		CreateGoal();
 
-		int count = basketGoal.transform.childCount - 1;
-		int target = Random.Range(0,count);
-		Destroy(basketGoal.transform.GetChild(target).gameObject);
+		DeleteGoal();
 
 		if(!gamefinish){
 			Invoke("GoalSpan",goalTimeSpan);
 		}
+	}
+
+	private void DeleteGoal(){
+		int count = basketGoal.transform.childCount - 1;
+		int target = Random.Range(0,count);
+		Destroy(basketGoal.transform.GetChild(target).gameObject);
 	}
 
 	private void CreateItem(){
@@ -124,13 +146,49 @@ public class GameManager : MonoBehaviour {
 		iTween.MoveFrom(gameoverView,iTween.Hash("x",-2));
 
 		CancelInvoke();
-
 		textScore.SetActive(false);
 	}
 
 	public void UpdateScore(int p){
 		point += p;
+		feverCount++;
+		if(feverCount==maxFeverCount){
+			FeverStart();
+		}
 		textScore.GetComponent<Text> ().text = point.ToString ();
+	}
+
+	private void FeverStart(){
+		CancelInvoke();
+
+		int childCount = ballField.transform.childCount;
+		for(int i=0;i<childCount;i++){
+			GameObject ball = ballField.transform.GetChild(i).gameObject;
+			Destroy(ball);
+		}
+		Invoke("FeverFinish",feverTime);
+
+		isFever = true;
+
+		feverBlack.SetActive(true);
+		neon.SetActive(true);
+
+		CreateGoal();
+		Invoke("GoalSpan",goalTimeSpan);
+		CreateAddBall();
+	}
+
+	private void FeverFinish(){
+		CancelInvoke();
+		DeleteGoal();
+
+		feverCount = 0;
+
+		feverBlack.SetActive(false);
+		neon.SetActive(false);
+
+		Invoke("CreateBall",5.0f);
+		Invoke("GoalSpan",goalTimeSpan);
 	}
 
 	public void CreateGoal(){
