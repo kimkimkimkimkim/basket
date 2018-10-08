@@ -7,10 +7,13 @@ using TMPro;
 public class CanvasHomeManager : MonoBehaviour {
 
 	public GameObject textDraw;
+	public GameObject buttonOtherBall;
+	public GameObject ballField;
 
 	// Use this for initialization
 	void Start () {
 		FadeOutText();
+		RefreshBallImage();
 	}
 
 	// Update is called once per frame
@@ -33,6 +36,13 @@ public class CanvasHomeManager : MonoBehaviour {
 		iTween.ValueTo(gameObject, iTween.Hash("from",1,"to",0,
 		"onupdate","UpdateTextAlfa","onupdatetarget",gameObject,
 		"oncomplete","FadeInText","oncompletetarget",gameObject));
+	}
+
+	public void RefreshBallImage(){
+		int num = PlayerPrefs.GetInt("selectedBall");
+
+		buttonOtherBall.transform.GetChild(0).gameObject.GetComponent<Image>().
+			sprite = ballField.GetComponent<BallFieldManager>().ballSkin[num];
 	}
 
 }

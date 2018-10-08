@@ -6,6 +6,13 @@ using TMPro;
 
 public enum PPKey {
 	best,
+	/*
+	skinは
+	skin1,
+	skin2, ・・・
+	のようにkeyを設定
+	*/
+	selectedBall,
 }
 
 public class GameManager : MonoBehaviour {
@@ -26,6 +33,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject ballField;
 	public GameObject feverBlack;
 	public GameObject neon;
+	public GameObject ballskinField;
 	public Vector3[] goalPosition = new Vector3[5];
 	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
@@ -47,6 +55,10 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		drawLine = GameObject.Find ("drawPhysicsLine");
 		//Invoke("CreateItem",5);
+		PlayerPrefs.SetInt("skin0",1);
+		PlayerPrefs.SetInt("skin1",1);
+		PlayerPrefs.SetInt("skin2",1);
+		PlayerPrefs.SetInt("skin6",1);
 	}
 
 	// Update is called once per frame
@@ -76,11 +88,12 @@ public class GameManager : MonoBehaviour {
 		ballCount++;
 		if(ballCount % 5 == 0)timeSpan = (timeSpan-0.2f > 2) ? timeSpan - 0.2f : 2;
 
-		GameObject addball = (GameObject)Instantiate(ballPrefab);
-		addball.transform.SetParent(ballField.transform);
+		GameObject ball = (GameObject)Instantiate(ballPrefab);
+		ball.transform.SetParent(ballField.transform);
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
-		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
-		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
+		ball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
+		ball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
+		ball.GetComponent<SpriteRenderer>().sprite = ballskinField.GetComponent<BallFieldManager>().ballSkin[PlayerPrefs.GetInt("selectedBall")];
 
 		if(!gamefinish){
 			Invoke("CreateBall",timeSpan);
