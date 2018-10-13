@@ -46,10 +46,11 @@ public class GameManager : MonoBehaviour {
 	private float feverBallSpan = 0.5f;
 	private float feverTime = 10.0f;
 	private bool gamefinish = false;
+	private bool isLeft = true;
 	private int point = 0;
 	private int ballCount = 0;
 	private int feverCount = 0;
-	private int maxFeverCount = 10;
+	private int maxFeverCount = 2;
 
 	// Use this for initialization
 	void Start () {
@@ -92,8 +93,17 @@ public class GameManager : MonoBehaviour {
 		ball.transform.SetParent(ballField.transform);
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
 		ball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
-		ball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
-		ball.GetComponent<SpriteRenderer>().sprite = ballskinField.GetComponent<BallFieldManager>().ballSkin[PlayerPrefs.GetInt("selectedBall")];
+
+		float angle = Random.Range(60.0f,80.0f);
+
+		float k = 4.2f;
+		float sin = k * Mathf.Sin(angle * (Mathf.PI / 180));
+		float cos = k * Mathf.Cos(angle * (Mathf.PI / 180));
+		//Debug.Log("cos :" + cos + ",sin :" + sin);
+		ball.GetComponent<Rigidbody2D>().velocity = new Vector2(cos,sin);
+
+		ball.GetComponent<SpriteRenderer>().sprite
+			= ballskinField.GetComponent<BallFieldManager>().ballSkin[PlayerPrefs.GetInt("selectedBall")];
 
 		if(!gamefinish){
 			Invoke("CreateBall",timeSpan);
@@ -102,11 +112,22 @@ public class GameManager : MonoBehaviour {
 
 	private void CreateAddBall(){
 
+		isLeft = !isLeft;
+
 		GameObject addball = (GameObject)Instantiate(addballPregab);
 		addball.transform.SetParent(ballField.transform);
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
 		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
-		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(1,4);
+		if(isLeft)addball.transform.localPosition = new Vector3(2.08f,-4.18f,0);
+
+		float angle = Random.Range(75.0f,80.0f);
+		if(isLeft)angle = 180.0f - angle;
+
+		float k = 4.2f;
+		float sin = k * Mathf.Sin(angle * (Mathf.PI / 180));
+		float cos = k * Mathf.Cos(angle * (Mathf.PI / 180));
+		//Debug.Log("cos :" + cos + ",sin :" + sin);
+		addball.GetComponent<Rigidbody2D>().velocity = new Vector2(cos,sin);
 
 		if(!gamefinish){
 			Invoke("CreateAddBall",feverBallSpan);
@@ -196,6 +217,8 @@ public class GameManager : MonoBehaviour {
 		DeleteGoal();
 
 		feverCount = 0;
+
+		isLeft = true;
 
 		feverBlack.SetActive(false);
 		neon.SetActive(false);
