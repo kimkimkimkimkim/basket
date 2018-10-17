@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class BallFieldManager : MonoBehaviour {
 
+	public GameObject camera;
 	public GameObject rowPrefab;
 	public GameObject skinButtonPrefab;
 	public Sprite[] ballSkin = new Sprite[12];
 	public Color noColor;
+	public string[] strCondition = new string[12];
 
 	private int rowNum = 4;
 	private int columnNum = 3;
@@ -18,6 +20,31 @@ public class BallFieldManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		CreateBallField();
+		//プレイ回数
+		for(int i=1;i<4;i++){
+			int num = camera.GetComponent<GameManager>().playCountCondition[i-1];
+			string str = string.Format("プレイ回数\n{0}回突破",num);
+			strCondition[i] = str;
+		}
+		//スコア
+		for(int i=4;i<7;i++){
+			int num = camera.GetComponent<GameManager>().scoreCondition[i-4];
+			string str = string.Format("ベストスコア\n{0}以上",num);
+			strCondition[i] = str;
+		}
+		//ログイン日数
+		for(int i=7;i<10;i++){
+			int num = camera.GetComponent<GameManager>().logindayseCondition[i-7];
+			string str = string.Format("ログイン日数\n{0}日以上",num);
+			strCondition[i] = str;
+		}
+		//動画報酬
+		int rnum = camera.GetComponent<GameManager>().rewordCondition;
+		string rstr = string.Format("動画視聴回数\n{0}回以上",rnum);
+		strCondition[10] = rstr;
+		//全スキン開放
+		strCondition[11] = "全部のスキン開放";
+
 	}
 
 	private void CreateBallField(){

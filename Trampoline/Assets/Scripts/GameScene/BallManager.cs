@@ -98,6 +98,15 @@ public class BallManager : MonoBehaviour {
 
 		camera.GetComponent<GameManager>().PointSE();
 
+		//プラットフォーム別の対応
+		#if UNITY_EDITOR
+    Debug.Log("Unity Editor");
+		#elif UNITY_IPHONE
+    camera.GetComponent<GameManager>().Vibration(1519); //振動
+		#else
+    Debug.Log("Any other platform");
+		#endif
+
 		//ボールをDestroy
 		Destroy(this.gameObject);
 	}

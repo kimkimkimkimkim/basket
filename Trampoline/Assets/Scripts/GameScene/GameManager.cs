@@ -1,24 +1,32 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Runtime.InteropServices;
 
 public enum PPKey {
-	best,
+	best, //ベストスコア
+	playcount, //プレイ回数
+	logindays, //ログイン日数
+	movierewordcount, //動画報酬視聴回数
+	skinNum, //スキン開放数
+	latestloginday, //最新ログイン日時
 	/*
 	skinは
-	skin1,
-	skin2, ・・・
+	skin0,
+	skin1, ・・・
 	のようにkeyを設定
 	*/
-	selectedBall,
+	selectedBall, //選択したボール（使用するボール）
 }
 
 public class GameManager : MonoBehaviour {
 
 	public AudioClip jumpSE;
 	public AudioClip pointSE;
+	public AudioClip gameoverSE;
 	public AudioSource audioSource;
 	public GameObject[] itemPrefab = new GameObject[3];
 	public GameObject addballPregab;
@@ -28,6 +36,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject goalPrefab;
 	public GameObject movegoalPrefab;
 	public GameObject textScore;
+	public GameObject sliderFever;
 	public GameObject canvasHome;
 	public GameObject wall;
 	public GameObject ballField;
@@ -38,6 +47,14 @@ public class GameManager : MonoBehaviour {
 	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
 	public int combo = 0;
+	//スキン開放に必要なプレイ回数⬇︎
+	public int[] playCountCondition = new int[]{10,50,100};
+	//スキン開放に必要なスコア
+	public int[] scoreCondition = new int[]{50,200,500};
+	//スキン開放に必要なログイン日数
+	public int[] logindayseCondition = new int[]{2,4,7};
+	//スキン開放に必要な動画視聴回数
+	public int rewordCondition = 10;
 
 	private GameObject drawLine;
 	private float timeSpan = 5.0f;
@@ -50,16 +67,28 @@ public class GameManager : MonoBehaviour {
 	private int point = 0;
 	private int ballCount = 0;
 	private int feverCount = 0;
-	private int maxFeverCount = 2;
+	private int maxFeverCount = 10;
+
+	[DllImport("__Internal")]
+  private static extern void Touch3D(int n);
 
 	// Use this for initialization
 	void Start () {
 		drawLine = GameObject.Find ("drawPhysicsLine");
 		//Invoke("CreateItem",5);
 		PlayerPrefs.SetInt("skin0",1);
-		PlayerPrefs.SetInt("skin1",1);
-		PlayerPrefs.SetInt("skin2",1);
-		PlayerPrefs.SetInt("skin6",1);
+
+		//ログイン機能
+		string day = DateTime.Now.ToString("yyyy/MM/dd/hh");
+		string latestday = PlayerPrefs.GetString(PPKey.latestloginday.ToString());
+		if(day != latestday){
+			//最終ログイン日時と現在の日時が違えばログイン日数更新
+			int n = PlayerPrefs.GetInt(PPKey.logindays.ToString()) + 1;
+			PlayerPrefs.SetInt(PPKey.logindays.ToString(), n);
+		}
+		PlayerPrefs.SetString(PPKey.latestloginday.ToString(),day);
+
+		RefreshFeverSlider();
 	}
 
 	// Update is called once per frame
@@ -74,6 +103,7 @@ public class GameManager : MonoBehaviour {
 		wall.transform.localPosition = new Vector3(wallPos.x,wallPos.y,0);
 
 		textScore.SetActive(true);
+		sliderFever.SetActive(true);
 
 		CreateGoal();
 		CreateGoal();
@@ -94,7 +124,7 @@ public class GameManager : MonoBehaviour {
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
 		ball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
 
-		float angle = Random.Range(60.0f,80.0f);
+		float angle = UnityEngine.Random.Range(60.0f,80.0f);
 
 		float k = 4.2f;
 		float sin = k * Mathf.Sin(angle * (Mathf.PI / 180));
@@ -120,7 +150,7 @@ public class GameManager : MonoBehaviour {
 		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
 		if(isLeft)addball.transform.localPosition = new Vector3(2.08f,-4.18f,0);
 
-		float angle = Random.Range(75.0f,80.0f);
+		float angle = UnityEngine.Random.Range(75.0f,80.0f);
 		if(isLeft)angle = 180.0f - angle;
 
 		float k = 4.2f;
@@ -146,14 +176,14 @@ public class GameManager : MonoBehaviour {
 
 	private void DeleteGoal(){
 		int count = basketGoal.transform.childCount - 1;
-		int target = Random.Range(0,count);
+		int target = UnityEngine.Random.Range(0,count);
 		Destroy(basketGoal.transform.GetChild(target).gameObject);
 	}
 
 	private void CreateItem(){
-		int target = Random.Range(0,itemPrefab.Length);
+		int target = UnityEngine.Random.Range(0,itemPrefab.Length);
 		GameObject item = (GameObject)Instantiate(itemPrefab[target]);
-		item.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
+		item.transform.localPosition = new Vector3(UnityEngine.Random.Range(-2.0f,2.3f),5.71f,0);
 
 		if(!gamefinish){
 			Invoke("CreateItem",itemTimeSpan);
@@ -161,9 +191,18 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameOver(){
+
+		//SE
+		audioSource.PlayOneShot(gameoverSE);
+
 		//線を引けなくする
 		drawLine.GetComponent<drawPhysicsLine> ().gamefinish = true;
 		gamefinish = true;
+
+		//プレイ回数上昇
+		int count = PlayerPrefs.GetInt(PPKey.playcount.ToString());
+		count++;
+		PlayerPrefs.SetInt(PPKey.playcount.ToString(),count);
 
 
 		//GameOverUIを表示
@@ -181,11 +220,14 @@ public class GameManager : MonoBehaviour {
 
 		CancelInvoke();
 		textScore.SetActive(false);
+
+		JudgeSkinRelease();
 	}
 
 	public void UpdateScore(int p){
 		point += p;
 		feverCount++;
+		UpdateFeverSlider();
 		if(feverCount==maxFeverCount){
 			FeverStart();
 		}
@@ -213,10 +255,15 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void FeverFinish(){
+		isFever = false;
+
 		CancelInvoke();
 		DeleteGoal();
 
 		feverCount = 0;
+
+		maxFeverCount++;
+		RefreshFeverSlider();
 
 		isLeft = true;
 
@@ -238,14 +285,14 @@ public class GameManager : MonoBehaviour {
 		int target = 0;
 
 		while(!isOK){
-			target = Random.Range (0, posCount);
+			target = UnityEngine.Random.Range (0, posCount);
 			if(goalposCheck[target] == 0) isOK = true;
 		}
 
 		goalposCheck[target] = 1;
 
 		GameObject goal;
-		if(Random.Range(0,5) == 1){
+		if(UnityEngine.Random.Range(0,5) == 1){
 			goal = (GameObject)Instantiate(movegoalPrefab);
 		}else{
 			goal = (GameObject)Instantiate(goalPrefab);
@@ -263,6 +310,74 @@ public class GameManager : MonoBehaviour {
 
 	public void PointSE(){
 		audioSource.PlayOneShot(pointSE);
+	}
+
+	//バイブレーション
+	//n -> 1519~1521
+	public void Vibration(int n){
+		Touch3D(n);
+	}
+
+	public void JudgeSkinRelease(){
+
+		//プレイ回数
+		int playC = PlayerPrefs.GetInt(PPKey.playcount.ToString());
+		if(playC >= playCountCondition[0]){
+			PlayerPrefs.SetInt("skin1",1);
+		}else if(playC >= playCountCondition[1]){
+			PlayerPrefs.SetInt("skin2",1);
+		}else if(playC >= playCountCondition[2]){
+			PlayerPrefs.SetInt("skin3",1);
+		}
+
+		//スコア
+		int score = PlayerPrefs.GetInt(PPKey.best.ToString());
+		if(score >= scoreCondition[0]){
+			PlayerPrefs.SetInt("skin4",1);
+		}else if(score >= scoreCondition[1]){
+			PlayerPrefs.SetInt("skin5",1);
+		}else if(score >= scoreCondition[2]){
+			PlayerPrefs.SetInt("skin6",1);
+		}
+
+		//ログイン日数
+		int days = PlayerPrefs.GetInt(PPKey.logindays.ToString());
+		if(days >= logindayseCondition[0]){
+			PlayerPrefs.SetInt("skin7",1);
+		}else if(days >= logindayseCondition[1]){
+			PlayerPrefs.SetInt("skin8",1);
+		}else if(days >= logindayseCondition[2]){
+			PlayerPrefs.SetInt("skin9",1);
+		}
+
+		//動画報酬
+		int movie = PlayerPrefs.GetInt(PPKey.movierewordcount.ToString());
+		if(movie == rewordCondition){
+			PlayerPrefs.SetInt("skin10",1);
+		}
+
+		//スキン全開放
+		int num = 0;
+		for(int i=0;i<11;i++){
+			string str = string.Format("skin{0}",i);
+			if(PlayerPrefs.GetInt(str) == 1)num++;
+		}
+		PlayerPrefs.SetInt(PPKey.skinNum.ToString(),num);
+		if(num == 11)PlayerPrefs.SetInt("skin11",1);
+
+	}
+
+	private void RefreshFeverSlider(){
+		sliderFever.GetComponent<Slider>().maxValue = maxFeverCount;
+		sliderFever.GetComponent<Slider>().value = 0;
+		string strText = string.Format("0/{0}",maxFeverCount);
+		sliderFever.transform.Find("Text").gameObject.GetComponent<Text>().text = strText;
+	}
+
+	private void UpdateFeverSlider(){
+		sliderFever.GetComponent<Slider>().value = feverCount;
+		string strText = string.Format("{0}/{1}",feverCount,maxFeverCount);
+		if(!isFever)sliderFever.transform.Find("Text").gameObject.GetComponent<Text>().text = strText;
 	}
 
 }

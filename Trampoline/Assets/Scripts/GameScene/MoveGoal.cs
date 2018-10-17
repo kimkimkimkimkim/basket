@@ -20,6 +20,6 @@ public class MoveGoal : MonoBehaviour {
 		degree += Time.deltaTime;
 		y = abs * Mathf.Sin (degree * speed) - delta;
 
-		this.transform.localPosition = new Vector3 (0,y,0);
+		this.transform.localPosition = new Vector3 (0,y,-0.5f);
 	}
 }
