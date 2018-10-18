@@ -13,6 +13,8 @@ public enum PPKey {
 	movierewordcount, //動画報酬視聴回数
 	skinNum, //スキン開放数
 	latestloginday, //最新ログイン日時
+	userid, //ユーザーID
+	username, //ユーザー名
 	/*
 	skinは
 	skin0,
@@ -43,6 +45,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject feverBlack;
 	public GameObject neon;
 	public GameObject ballskinField;
+	public GameObject firebaseManager;
 	public Vector3[] goalPosition = new Vector3[5];
 	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
@@ -89,6 +92,15 @@ public class GameManager : MonoBehaviour {
 		PlayerPrefs.SetString(PPKey.latestloginday.ToString(),day);
 
 		RefreshFeverSlider();
+
+		//初回起動時useridを設定
+		if(PlayerPrefs.GetString(PPKey.userid.ToString()) == ""){
+			System.Guid guid = System.Guid.NewGuid ();
+			string uuid = guid.ToString ();
+			PlayerPrefs.SetString(PPKey.userid.ToString(),uuid);
+		}else{
+			//Debug.Log(PlayerPrefs.GetString(PPKey.userid.ToString()));
+		}
 	}
 
 	// Update is called once per frame
@@ -191,6 +203,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameOver(){
+
+		//RealtimeDataBaseにscoreを保存
+		string id = PlayerPrefs.GetString(PPKey.userid.ToString());
+		string name = PlayerPrefs.GetString(PPKey.username.ToString());
+		string bestscore = PlayerPrefs.GetInt(PPKey.best.ToString()).ToString();
+		firebaseManager.GetComponent<FirebaseManager>().writeNewScore(id, name, bestscore);
 
 		//SE
 		audioSource.PlayOneShot(gameoverSE);
