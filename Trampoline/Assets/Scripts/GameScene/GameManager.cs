@@ -204,12 +204,6 @@ public class GameManager : MonoBehaviour {
 
 	public void GameOver(){
 
-		//RealtimeDataBaseにscoreを保存
-		string id = PlayerPrefs.GetString(PPKey.userid.ToString());
-		string name = PlayerPrefs.GetString(PPKey.username.ToString());
-		string bestscore = PlayerPrefs.GetInt(PPKey.best.ToString()).ToString();
-		firebaseManager.GetComponent<FirebaseManager>().writeNewScore(id, name, bestscore);
-
 		//SE
 		audioSource.PlayOneShot(gameoverSE);
 
@@ -228,6 +222,12 @@ public class GameManager : MonoBehaviour {
 		int best = PlayerPrefs.GetInt(PPKey.best.ToString());
 		if(score > best)best = score;
 		PlayerPrefs.SetInt(PPKey.best.ToString(), best);
+
+		//RealtimeDataBaseにscoreを保存
+		string id = PlayerPrefs.GetString(PPKey.userid.ToString());
+		string name = PlayerPrefs.GetString(PPKey.username.ToString(),"No Name");
+		int bestscore = PlayerPrefs.GetInt(PPKey.best.ToString());
+		firebaseManager.GetComponent<FirebaseManager>().writeNewScore(id, name, bestscore);
 
 		gameoverView.SetActive(true);
 		gameoverView.transform.Find("TextScore").GetChild(0).GetComponent<TextMeshProUGUI>().text

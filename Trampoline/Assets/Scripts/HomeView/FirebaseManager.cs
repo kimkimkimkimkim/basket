@@ -40,18 +40,18 @@ public class FirebaseManager : MonoBehaviour {
 
 	public class User {
     public string username;
-    public string score;
+    public int score;
 
     public User() {
     }
 
-    public User(string username, string score) {
+    public User(string username, int score) {
         this.username = username;
         this.score = score;
     }
 	}
 
-	public void writeNewScore(string userId, string name, string score) {
+	public void writeNewScore(string userId, string name, int score) {
     User user = new User(name,score);
     string json = JsonUtility.ToJson(user);
 		Debug.Log(json);
@@ -61,26 +61,30 @@ public class FirebaseManager : MonoBehaviour {
 	public void getRanking(){
 		//RealtileDataBaseから現在のランキングを取得
 		//bossNoのノードからtimeで昇順ソートして最大10件を取る（非同期)
-		reference.Child("ranking").OrderByChild("score").LimitToFirst(10).GetValueAsync().ContinueWith(task =>{
+		reference.Child("ranking").OrderByChild("score").LimitToLast(10).GetValueAsync().ContinueWith(task =>{
   		if(task.IsFaulted){ //取得失敗
     	//Handle the Error
 			Debug.Log("error");
 	  	}else if(task.IsCompleted){ //取得成功
+				Debug.Log("取得成功");
 		    DataSnapshot snapshot = task.Result; //結果取得
-				Debug.Log(snapshot.ToString());
+				//Debug.Log(snapshot.ToString());
 		    IEnumerator<DataSnapshot> en = snapshot.Children.GetEnumerator(); //結果リストをenumeratorで処理
 		    int rank = 1;
 		    while(en.MoveNext()){ //１件ずつ処理
+
 		      DataSnapshot data = en.Current; //データ取る
-		      string name = (string)data.Child("username").GetValue(true); //名前取る
-		      string score = (string)data.Child("score").GetValue(true); //スコアを取る
-					Debug.Log("name:" + name + " score:" + score);
-					/*
+		      string name = data.Child("username").GetValue(true).ToString(); //名前取る
+		      string score = data.Child("score").GetValue(true).ToString(); //スコアを取る
+					//Debug.Log("whileの中");
+					//Debug.Log("name:" + data.Child("username").GetValue(true) + " score:" + data.Child("score").GetValue(true));
+					//Debug.Log("name:" + name + " score:" + score);
+
 					//Textに反映
-					GameObject row = rankingSpace.transform.GetChild(rank).gameObject;
-					row.transform.GetChild(0).gameObject.GetComponent<Text>().text = rank.ToString(); //順位
+					GameObject row = rankingSpace.transform.GetChild(11 - rank).gameObject;
+					row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (11 - rank).ToString(); //順位
 					row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
-					row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前*/
+					row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
 		      rank++;
 		    }
 

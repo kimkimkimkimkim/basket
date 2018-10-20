@@ -9,11 +9,13 @@ public class CanvasHomeManager : MonoBehaviour {
 	public GameObject textDraw;
 	public GameObject buttonOtherBall;
 	public GameObject ballField;
+	public GameObject inputField;
 
 	// Use this for initialization
 	void Start () {
 		FadeOutText();
 		RefreshBallImage();
+		inputField.GetComponent<InputField>().text = PlayerPrefs.GetString("username","No Name");
 	}
 
 	// Update is called once per frame
@@ -43,6 +45,11 @@ public class CanvasHomeManager : MonoBehaviour {
 
 		buttonOtherBall.transform.GetChild(0).gameObject.GetComponent<Image>().
 			sprite = ballField.GetComponent<BallFieldManager>().ballSkin[num];
+	}
+
+	//InputField用のメソッド
+	public void UpdateText(){
+		PlayerPrefs.SetString("username",inputField.GetComponent<InputField>().text);
 	}
 
 }
