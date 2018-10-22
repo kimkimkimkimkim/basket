@@ -15,6 +15,8 @@ public enum PPKey {
 	latestloginday, //最新ログイン日時
 	userid, //ユーザーID
 	username, //ユーザー名
+	vibration, //バイブの有無
+	music, //音の有無
 	/*
 	skinは
 	skin0,
@@ -46,6 +48,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject neon;
 	public GameObject ballskinField;
 	public GameObject firebaseManager;
+	public GameObject adBanner;
+	public GameObject adRectangle;
 	public Vector3[] goalPosition = new Vector3[5];
 	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
@@ -109,6 +113,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameStart(){
+
+		//ボトムバナー広告を非表示
+		adBanner.GetComponent<AdBanner>().HideAd();
 
 		canvasHome.SetActive(false);
 		Vector3 wallPos = wall.transform.localPosition;
@@ -222,6 +229,9 @@ public class GameManager : MonoBehaviour {
 		int best = PlayerPrefs.GetInt(PPKey.best.ToString());
 		if(score > best)best = score;
 		PlayerPrefs.SetInt(PPKey.best.ToString(), best);
+
+		//レクタングル広告表示
+		adRectangle.GetComponent<AdRectangle>().ShowAd();
 
 		//RealtimeDataBaseにscoreを保存
 		string id = PlayerPrefs.GetString(PPKey.userid.ToString());
