@@ -86,8 +86,9 @@ public class GameManager : MonoBehaviour {
 		PlayerPrefs.SetInt("skin0",1);
 
 		//ログイン機能
-		string day = DateTime.Now.ToString("yyyy/MM/dd/hh");
+		string day = DateTime.Now.ToString("yyyy/MM/dd");
 		string latestday = PlayerPrefs.GetString(PPKey.latestloginday.ToString());
+		Debug.Log("現在の日にち:" + day + " 前回のログイン:" + latestday);
 		if(day != latestday){
 			//最終ログイン日時と現在の日時が違えばログイン日数更新
 			int n = PlayerPrefs.GetInt(PPKey.logindays.ToString()) + 1;
@@ -105,6 +106,8 @@ public class GameManager : MonoBehaviour {
 		}else{
 			//Debug.Log(PlayerPrefs.GetString(PPKey.userid.ToString()));
 		}
+
+		JudgeSkinRelease();
 	}
 
 	// Update is called once per frame
@@ -352,9 +355,11 @@ public class GameManager : MonoBehaviour {
 		int playC = PlayerPrefs.GetInt(PPKey.playcount.ToString());
 		if(playC >= playCountCondition[0]){
 			PlayerPrefs.SetInt("skin1",1);
-		}else if(playC >= playCountCondition[1]){
+		}
+		if(playC >= playCountCondition[1]){
 			PlayerPrefs.SetInt("skin2",1);
-		}else if(playC >= playCountCondition[2]){
+		}
+		if(playC >= playCountCondition[2]){
 			PlayerPrefs.SetInt("skin3",1);
 		}
 
@@ -362,9 +367,11 @@ public class GameManager : MonoBehaviour {
 		int score = PlayerPrefs.GetInt(PPKey.best.ToString());
 		if(score >= scoreCondition[0]){
 			PlayerPrefs.SetInt("skin4",1);
-		}else if(score >= scoreCondition[1]){
+		}
+		if(score >= scoreCondition[1]){
 			PlayerPrefs.SetInt("skin5",1);
-		}else if(score >= scoreCondition[2]){
+		}
+		if(score >= scoreCondition[2]){
 			PlayerPrefs.SetInt("skin6",1);
 		}
 
@@ -372,9 +379,11 @@ public class GameManager : MonoBehaviour {
 		int days = PlayerPrefs.GetInt(PPKey.logindays.ToString());
 		if(days >= logindayseCondition[0]){
 			PlayerPrefs.SetInt("skin7",1);
-		}else if(days >= logindayseCondition[1]){
+		}
+		if(days >= logindayseCondition[1]){
 			PlayerPrefs.SetInt("skin8",1);
-		}else if(days >= logindayseCondition[2]){
+		}
+		if(days >= logindayseCondition[2]){
 			PlayerPrefs.SetInt("skin9",1);
 		}
 
