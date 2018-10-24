@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject firebaseManager;
 	public GameObject adBanner;
 	public GameObject adRectangle;
+	public GameObject adInterstitial;
 	public Vector3[] goalPosition = new Vector3[5];
 	public bool isFever = false;
 	public int[] goalposCheck = {0,0,0,0,0};
@@ -81,6 +82,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		adInterstitial.GetComponent<AdInterstitial>().ShowAd();
+
 		drawLine = GameObject.Find ("drawPhysicsLine");
 		//Invoke("CreateItem",5);
 		PlayerPrefs.SetInt("skin0",1);

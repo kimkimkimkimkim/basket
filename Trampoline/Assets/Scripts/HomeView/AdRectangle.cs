@@ -50,7 +50,7 @@ public class AdRectangle : MonoBehaviour {
         // iPhoneX対応
         if (Screen.width == 1125 && Screen.height == 2436) {
             ADGUnitySDK2.X = ADGUnitySDK2.getNativeWidth() / 2 - 320 * (float)ADGUnitySDK2.Scale / 2;
-            ADGUnitySDK2.Y = ADGUnitySDK2.getNativeHeight()/2;
+            ADGUnitySDK2.Y = Screen.height/2 - ADGUnitySDK2.getNativeHeight()/2;
             ADGUnitySDK2.changeLocationADG(ADGUnitySDK2.X, ADGUnitySDK2.Y);
         }
 	}
