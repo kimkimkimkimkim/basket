@@ -6,6 +6,7 @@ using TMPro;
 
 public class CanvasHomeManager : MonoBehaviour {
 
+	public GameObject camera;
 	public GameObject textDraw;
 	public GameObject buttonOtherBall;
 	public GameObject ballField;
@@ -50,6 +51,7 @@ public class CanvasHomeManager : MonoBehaviour {
 	//InputField用のメソッド
 	public void UpdateText(){
 		PlayerPrefs.SetString("username",inputField.GetComponent<InputField>().text);
+		camera.GetComponent<GameManager>().SaveToFB();
 	}
 
 }

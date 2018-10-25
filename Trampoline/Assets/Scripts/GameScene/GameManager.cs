@@ -16,7 +16,7 @@ public enum PPKey {
 	userid, //ユーザーID
 	username, //ユーザー名
 	vibration, //バイブの有無
-	music, //音の有無
+	sound, //音の有無
 	/*
 	skinは
 	skin0,
@@ -218,7 +218,9 @@ public class GameManager : MonoBehaviour {
 	public void GameOver(){
 
 		//SE
-		audioSource.PlayOneShot(gameoverSE);
+		if(PlayerPrefs.GetInt("sound",1)==1){
+			audioSource.PlayOneShot(gameoverSE);
+		}
 
 		//線を引けなくする
 		drawLine.GetComponent<drawPhysicsLine> ().gamefinish = true;
@@ -240,10 +242,7 @@ public class GameManager : MonoBehaviour {
 		adRectangle.GetComponent<AdRectangle>().ShowAd();
 
 		//RealtimeDataBaseにscoreを保存
-		string id = PlayerPrefs.GetString(PPKey.userid.ToString());
-		string name = PlayerPrefs.GetString(PPKey.username.ToString(),"No Name");
-		int bestscore = PlayerPrefs.GetInt(PPKey.best.ToString());
-		firebaseManager.GetComponent<FirebaseManager>().writeNewScore(id, name, bestscore);
+		SaveToFB();
 
 		gameoverView.SetActive(true);
 		gameoverView.transform.Find("TextScore").GetChild(0).GetComponent<TextMeshProUGUI>().text
@@ -256,6 +255,14 @@ public class GameManager : MonoBehaviour {
 		textScore.SetActive(false);
 
 		JudgeSkinRelease();
+	}
+
+	public void SaveToFB(){
+		//RealtimeDataBaseにscoreを保存
+		string id = PlayerPrefs.GetString(PPKey.userid.ToString());
+		string name = PlayerPrefs.GetString(PPKey.username.ToString(),"No Name");
+		int bestscore = PlayerPrefs.GetInt(PPKey.best.ToString());
+		firebaseManager.GetComponent<FirebaseManager>().writeNewScore(id, name, -1 * bestscore);
 	}
 
 	public void UpdateScore(int p){
@@ -339,17 +346,30 @@ public class GameManager : MonoBehaviour {
 
 	//オーディオ
 	public void JumpSE(){
-		audioSource.PlayOneShot(jumpSE);
+		if(PlayerPrefs.GetInt("sound",1)==1){
+			audioSource.PlayOneShot(jumpSE);
+		}
 	}
 
 	public void PointSE(){
-		audioSource.PlayOneShot(pointSE);
+		if(PlayerPrefs.GetInt("sound",1)==1){
+			audioSource.PlayOneShot(pointSE);
+		}
 	}
 
 	//バイブレーション
 	//n -> 1519~1521
 	public void Vibration(int n){
-		Touch3D(n);
+		if(PlayerPrefs.GetInt("vibration",1)==1){
+			//プラットフォーム別の対応
+			#if UNITY_EDITOR
+			Debug.Log("Unity Editor");
+			#elif UNITY_IPHONE
+			Touch3D(n); //振動
+			#else
+			Debug.Log("Any other platform");
+			#endif
+		}
 	}
 
 	public void JudgeSkinRelease(){

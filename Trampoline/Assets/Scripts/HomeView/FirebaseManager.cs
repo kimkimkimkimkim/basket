@@ -13,7 +13,6 @@ public class FirebaseManager : MonoBehaviour {
 	public GameObject rankingSpace;
 
 	void Start() {
-
 		// Set up the Editor before calling into the realtime database.
 		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com/");
 
@@ -61,7 +60,7 @@ public class FirebaseManager : MonoBehaviour {
 	public void getRanking(){
 		//RealtileDataBaseから現在のランキングを取得
 		//bossNoのノードからtimeで昇順ソートして最大10件を取る（非同期)
-		reference.Child("ranking").OrderByChild("score").LimitToLast(10).GetValueAsync().ContinueWith(task =>{
+		reference.Child("ranking").OrderByChild("score").GetValueAsync().ContinueWith(task =>{
   		if(task.IsFaulted){ //取得失敗
     	//Handle the Error
 			Debug.Log("error");
@@ -71,20 +70,38 @@ public class FirebaseManager : MonoBehaviour {
 				//Debug.Log(snapshot.ToString());
 		    IEnumerator<DataSnapshot> en = snapshot.Children.GetEnumerator(); //結果リストをenumeratorで処理
 		    int rank = 1;
+				bool flag = false;
+				string userid = PlayerPrefs.GetString("userid");
 		    while(en.MoveNext()){ //１件ずつ処理
-
-		      DataSnapshot data = en.Current; //データ取る
-		      string name = data.Child("username").GetValue(true).ToString(); //名前取る
-		      string score = data.Child("score").GetValue(true).ToString(); //スコアを取る
-					//Debug.Log("whileの中");
-					//Debug.Log("name:" + data.Child("username").GetValue(true) + " score:" + data.Child("score").GetValue(true));
-					//Debug.Log("name:" + name + " score:" + score);
-
-					//Textに反映
-					GameObject row = rankingSpace.transform.GetChild(11 - rank).gameObject;
-					row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (11 - rank).ToString(); //順位
-					row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
-					row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
+					DataSnapshot data = en.Current; //データ取る
+					string name = data.Child("username").GetValue(true).ToString(); //名前取る
+					string score = data.Child("score").GetValue(true).ToString().Substring(1); //スコアを取る
+					if(score=="")score = "0";
+					string id = data.Key.ToString(); //useridを取る
+					if(rank<=10){
+						//Textに反映
+						GameObject row = rankingSpace.transform.GetChild(rank).gameObject;
+						row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (rank).ToString(); //順位
+						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
+						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
+						if(userid == id){
+							//自分の時はハイライト
+							row.GetComponent<Image>().enabled = true;
+							flag = true;
+						}
+					}
+					if(userid == id){
+						//Textに反映
+						GameObject row = rankingSpace.transform.GetChild(10).gameObject;
+						row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (rank).ToString(); //順位
+						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
+						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
+						row.GetComponent<Image>().enabled = true;
+						break;
+					}
+					if(flag && rank > 10){
+						break;
+					}
 		      rank++;
 		    }
 

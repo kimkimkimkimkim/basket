@@ -80,6 +80,11 @@ public class AddBallManager : MonoBehaviour {
 		//ポイント反映
 		camera.GetComponent<GameManager> ().UpdateScore (combo);
 		camera.GetComponent<GameManager> ().CreateGoal ();
+
+		camera.GetComponent<GameManager>().PointSE();
+
+		camera.GetComponent<GameManager>().Vibration(1519); //振動
+
 		//ボールをDestroy
 		Destroy(this.gameObject);
 
