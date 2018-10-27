@@ -90,16 +90,16 @@ public class FirebaseManager : MonoBehaviour {
 							flag = true;
 						}
 					}
-					if(userid == id){
+					if(flag && rank > 10){
+						break;
+					}
+					if(userid == id && rank>10){
 						//Textに反映
 						GameObject row = rankingSpace.transform.GetChild(10).gameObject;
 						row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (rank).ToString(); //順位
 						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
 						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
 						row.GetComponent<Image>().enabled = true;
-						break;
-					}
-					if(flag && rank > 10){
 						break;
 					}
 		      rank++;

@@ -19,6 +19,10 @@ public class CanvasHomeManager : MonoBehaviour {
 		inputField.GetComponent<InputField>().text = PlayerPrefs.GetString("username","No Name");
 	}
 
+	void OnEnable() {
+		RefreshBallImage();
+	}
+
 	// Update is called once per frame
 	void Update () {
 

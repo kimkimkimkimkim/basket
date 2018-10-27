@@ -24,4 +24,5 @@ public class SoundButton : MonoBehaviour {
 			camera.GetComponent<GameManager>().PointSE();
 		}
 	}
+
 }

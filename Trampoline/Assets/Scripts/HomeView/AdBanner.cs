@@ -10,10 +10,9 @@ public class AdBanner : MonoBehaviour {
 
     private bool AdBannerShowFlag;
 
-    
-
 	void Awake() {
         ADGUnitySDK.IOSLocationID = "48547";
+        ADGUnitySDK.AndroidLocationID = "48547";
         ADGUnitySDK.AdType = "FREE";
         if (Screen.width != 1125 && Screen.height != 2436) {
             ADGUnitySDK.IsIOSEasyPosition = true;

@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
 	public AudioClip jumpSE;
 	public AudioClip pointSE;
 	public AudioClip gameoverSE;
+	public AudioClip feverSE;
 	public AudioSource audioSource;
 	public GameObject[] itemPrefab = new GameObject[3];
 	public GameObject addballPregab;
@@ -62,14 +63,14 @@ public class GameManager : MonoBehaviour {
 	//スキン開放に必要なログイン日数
 	public int[] logindayseCondition = new int[]{2,4,7};
 	//スキン開放に必要な動画視聴回数
-	public int rewordCondition = 10;
+	public int rewordCondition = 100;
 
 	private GameObject drawLine;
 	private float timeSpan = 5.0f;
 	private float goalTimeSpan = 20.0f;
 	private float itemTimeSpan = 5.0f;
 	private float feverBallSpan = 0.5f;
-	private float feverTime = 10.0f;
+	private float feverTime = 15.0f;
 	private bool gamefinish = false;
 	private bool isLeft = true;
 	private int point = 0;
@@ -147,7 +148,7 @@ public class GameManager : MonoBehaviour {
 		GameObject ball = (GameObject)Instantiate(ballPrefab);
 		ball.transform.SetParent(ballField.transform);
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
-		ball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
+		ball.transform.localPosition = new Vector3(-2.08f,-4.18f,-1);
 
 		float angle = UnityEngine.Random.Range(60.0f,80.0f);
 
@@ -172,8 +173,8 @@ public class GameManager : MonoBehaviour {
 		GameObject addball = (GameObject)Instantiate(addballPregab);
 		addball.transform.SetParent(ballField.transform);
 		//addball.transform.localPosition = new Vector3(Random.Range(-2.0f,2.3f),5.71f,0);
-		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,0);
-		if(isLeft)addball.transform.localPosition = new Vector3(2.08f,-4.18f,0);
+		addball.transform.localPosition = new Vector3(-2.08f,-4.18f,-1);
+		if(isLeft)addball.transform.localPosition = new Vector3(2.08f,-4.18f,-1);
 
 		float angle = UnityEngine.Random.Range(75.0f,80.0f);
 		if(isLeft)angle = 180.0f - angle;
@@ -278,6 +279,13 @@ public class GameManager : MonoBehaviour {
 	private void FeverStart(){
 		CancelInvoke();
 
+		//SE
+		FeverSE();
+
+		//fevercountを上昇
+		int c = PlayerPrefs.GetInt("fevercount",0);
+		PlayerPrefs.SetInt("fevercount",c+1);
+
 		int childCount = ballField.transform.childCount;
 		for(int i=0;i<childCount;i++){
 			GameObject ball = ballField.transform.GetChild(i).gameObject;
@@ -297,6 +305,8 @@ public class GameManager : MonoBehaviour {
 
 	private void FeverFinish(){
 		isFever = false;
+
+		audioSource.Stop();
 
 		CancelInvoke();
 		DeleteGoal();
@@ -357,6 +367,12 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void FeverSE(){
+		if(PlayerPrefs.GetInt("sound",1)==1){
+			audioSource.PlayOneShot(feverSE);
+		}
+	}
+
 	//バイブレーション
 	//n -> 1519~1521
 	public void Vibration(int n){
@@ -366,8 +382,10 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Unity Editor");
 			#elif UNITY_IPHONE
 			Touch3D(n); //振動
-			#else
-			Debug.Log("Any other platform");
+			#else 
+			if (SystemInfo.supportsVibration){
+ 				Handheld.Vibrate();
+			}
 			#endif
 		}
 	}
@@ -411,7 +429,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		//動画報酬
-		int movie = PlayerPrefs.GetInt(PPKey.movierewordcount.ToString());
+		int movie = PlayerPrefs.GetInt("fevercount");
 		if(movie == rewordCondition){
 			PlayerPrefs.SetInt("skin10",1);
 		}

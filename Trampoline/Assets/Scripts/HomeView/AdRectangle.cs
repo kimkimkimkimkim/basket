@@ -8,11 +8,10 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class AdRectangle : MonoBehaviour {
 
-	private bool AdRectangleShowFlag = false;
-
 	void Awake() {
 
-        ADGUnitySDK2.IOSLocationID = "70787";
+        ADGUnitySDK2.IOSLocationID = "48547";
+        ADGUnitySDK2.AndroidLocationID = "48547";
         ADGUnitySDK2.AdType = "RECT";
         if (Screen.width != 1125 && Screen.height != 2436) {
             ADGUnitySDK2.IsIOSEasyPosition = true;
@@ -21,16 +20,17 @@ public class AdRectangle : MonoBehaviour {
         }
         float width = 300;
         float height = 250;
+        float scale = 1 + height / width;
         ADGUnitySDK2.Width = (int)(width);
         ADGUnitySDK2.Height = (int)(height);
-        ADGUnitySDK2.MessageObjName = "AdRectManager";
+        //ADGUnitySDK2.Scale = scale;
+        ADGUnitySDK2.MessageObjName = "Main Camera";
 	}
 
     void Start(){
         InitAd();
         LoadAd();
         HideAd();
-        //ShowAd();
     }
 
 	void Update(){
@@ -50,7 +50,7 @@ public class AdRectangle : MonoBehaviour {
         // iPhoneX対応
         if (Screen.width == 1125 && Screen.height == 2436) {
             ADGUnitySDK2.X = ADGUnitySDK2.getNativeWidth() / 2 - 320 * (float)ADGUnitySDK2.Scale / 2;
-            ADGUnitySDK2.Y = Screen.height/2 - ADGUnitySDK2.getNativeHeight()/2;
+            ADGUnitySDK2.Y = ADGUnitySDK2.getNativeHeight()/2;
             ADGUnitySDK2.changeLocationADG(ADGUnitySDK2.X, ADGUnitySDK2.Y);
         }
 	}
@@ -60,6 +60,7 @@ public class AdRectangle : MonoBehaviour {
     }
 
     public void ShowAd() {
+        Debug.Log("show rectangle");
         ADGUnitySDK2.showADG();
     }
 

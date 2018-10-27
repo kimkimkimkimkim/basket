@@ -53,7 +53,7 @@ public class SkinButton : MonoBehaviour {
 				textProgress.GetComponent<Text>().text = strProgress;
 			}else if(myNum == 10){
 				//動画報酬
-				int now = PlayerPrefs.GetInt("movierewordcount");
+				int now = PlayerPrefs.GetInt("fevercount");
 				int condition = camera.GetComponent<GameManager>().rewordCondition;
 				string strProgress = string.Format("{0}/{1}",now,condition);
 				textProgress.GetComponent<Text>().text = strProgress;

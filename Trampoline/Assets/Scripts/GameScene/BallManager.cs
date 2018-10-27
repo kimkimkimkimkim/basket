@@ -43,24 +43,12 @@ public class BallManager : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D col){
-		if (col.gameObject.tag == "Goal") {
+		if (col.gameObject.tag == "In") {
 			if(!isRising)isIn = true;
 		}
 
 		if (col.gameObject.tag == "Out") {
 			if(isIn)Point (col);
-		}
-
-		if(col.gameObject.tag == "GoalBig"){
-			Destroy(col.gameObject);
-		}
-
-		if(col.gameObject.tag == "GoalSmall"){
-			Destroy(col.gameObject);
-		}
-
-		if(col.gameObject.tag == "Double"){
-			Destroy(col.gameObject);
 		}
 
 		if(col.gameObject.tag == "Wall"){

@@ -40,7 +40,7 @@ public class BallFieldManager : MonoBehaviour {
 		}
 		//動画報酬
 		int rnum = camera.GetComponent<GameManager>().rewordCondition;
-		string rstr = string.Format("動画視聴回数\n{0}回以上",rnum);
+		string rstr = string.Format("フィーバー\n{0}回以上",rnum);
 		strCondition[10] = rstr;
 		//全スキン開放
 		strCondition[11] = "全部のスキン開放";
