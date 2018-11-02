@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:713606047975:android:f67f4ffe93adbe7a",
+        "mobilesdk_app_id": "1:713606047975:android:e15af3973e17d282",
         "android_client_info": {
-          "package_name": "com.kimsangwoo.Trampoline"
+          "package_name": "com.Lame.BoundBasket"
         }
       },
       "oauth_client": [

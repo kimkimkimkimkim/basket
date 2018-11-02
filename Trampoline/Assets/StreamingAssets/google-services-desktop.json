@@ -1,42 +1,37 @@
 {
-  "project_info": {
-    "project_number": "713606047975",
-    "firebase_url": "https://trampolinebasket.firebaseio.com",
-    "project_id": "trampolinebasket",
-    "storage_bucket": "trampolinebasket.appspot.com"
-  },
   "client": [
     {
-      "client_info": {
-        "mobilesdk_app_id": "1:713606047975:android:f67f4ffe93adbe7a",
-        "android_client_info": {
-          "package_name": "com.kimsangwoo.Trampoline"
+      "services": {
+        "appinvite_service": {
+          "status": 0
+        }, 
+        "analytics_service": {
+          "status": 0
         }
-      },
+      }, 
       "oauth_client": [
         {
-          "client_id": "713606047975-eg7865s0nlbnmvomr5mq5b2nplo08691.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "713606047975-1ovkqio2q2n5td0sd42s5li7qgq6q3ic.apps.googleusercontent.com"
         }
-      ],
+      ], 
       "api_key": [
         {
-          "current_key": "AIzaSyBUr7xPjgnApz_iLwlPDNXDR2Df09UTX0M"
+          "current_key": "AIzaSyABvBAv6XYzenas7LUzAjnzWrG_EYkGA10"
         }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+      ], 
+      "client_info": {
+        "mobilesdk_app_id": "1:713606047975:ios:e15af3973e17d282", 
+        "android_client_info": {
+          "package_name": "com.Lame.BoundBasket"
         }
       }
     }
-  ],
-  "configuration_version": "1"
+  ], 
+  "configuration_version": "1", 
+  "project_info": {
+    "storage_bucket": "trampolinebasket.appspot.com", 
+    "project_id": "trampolinebasket", 
+    "firebase_url": "https://trampolinebasket.firebaseio.com", 
+    "project_number": "713606047975"
+  }
 }

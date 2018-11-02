@@ -11,8 +11,8 @@ public class AdBanner : MonoBehaviour {
     private bool AdBannerShowFlag;
 
 	void Awake() {
-        ADGUnitySDK.IOSLocationID = "48547";
-        ADGUnitySDK.AndroidLocationID = "48547";
+        ADGUnitySDK.IOSLocationID = "72698";
+        ADGUnitySDK.AndroidLocationID = "72700";
         ADGUnitySDK.AdType = "FREE";
         if (Screen.width != 1125 && Screen.height != 2436) {
             ADGUnitySDK.IsIOSEasyPosition = true;
@@ -25,7 +25,7 @@ public class AdBanner : MonoBehaviour {
         ADGUnitySDK.Width = (int)(width * scale);
         ADGUnitySDK.Height = (int)(height * scale);
         ADGUnitySDK.Scale = scale;
-        ADGUnitySDK.MessageObjName = "Main Camera";
+        ADGUnitySDK.MessageObjName = "";
         AdBannerShowFlag = true;
 	}
 

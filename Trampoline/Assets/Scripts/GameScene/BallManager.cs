@@ -19,7 +19,7 @@ public class BallManager : MonoBehaviour {
 	private bool isRising = false;
 	private bool isIn = false;
 	private bool canChangeCol = true;
-
+	private bool whetherBounded = false;
 
 	// Use this for initialization
 	void Start () {
@@ -40,6 +40,13 @@ public class BallManager : MonoBehaviour {
 			Bound (col);
 		}
 
+	}
+
+	void OnCollisionStay2D(Collision2D col){
+		if (col.gameObject.tag == "Trampoline") {
+			isIn = false;
+			Bound (col);
+		}
 	}
 
 	void OnTriggerEnter2D(Collider2D col){
@@ -66,15 +73,6 @@ public class BallManager : MonoBehaviour {
 	}
 
 	void Point(Collider2D col){
-		//Debug.Log ("point");
-		//ゴールを削除
-		/*
-		if(col.transform.parent.parent.gameObject.tag == "MoveGoal"){
-			Destroy(col.transform.parent.parent.gameObject);
-		}else{
-			Destroy(col.transform.parent.gameObject);
-		}
-		*/
 		//ポイント反映
 		camera.GetComponent<GameManager> ().UpdateScore (1);
 		//camera.GetComponent<GameManager> ().CreateGoal ();
@@ -103,6 +101,7 @@ public class BallManager : MonoBehaviour {
 		if(vel >= 0)isRising = true;
 		if (vel < 0)isRising = false;
 
+		if(!isRising)whetherBounded=false;
 		if(!isRising)canChangeCol = true;
 		if(canChangeCol)ChangeColliderEnable (!isRising);
 
@@ -138,6 +137,7 @@ public class BallManager : MonoBehaviour {
 
 
 	void Bound(Collision2D col){
+		if(whetherBounded){return;}
 		Vector3 colAngle = col.transform.localEulerAngles;
 		colAngle.z = TransformAngle(colAngle.z);
 
@@ -156,6 +156,8 @@ public class BallManager : MonoBehaviour {
 		GetComponent<Rigidbody2D>().velocity = transform.up * speed;
 
 		camera.GetComponent<GameManager>().JumpSE();
+
+		whetherBounded = true;
 
 		//トランポリンを削除
 		Destroy (col.gameObject);

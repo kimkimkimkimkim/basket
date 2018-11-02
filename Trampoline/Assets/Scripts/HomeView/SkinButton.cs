@@ -69,7 +69,7 @@ public class SkinButton : MonoBehaviour {
 			ballField.GetComponent<BallFieldManager>().Refresh();
 			transform.Find("select").gameObject.SetActive(true);
 			PlayerPrefs.SetInt("selectedBall",myNum);
-			canvasHome.GetComponent<CanvasHomeManager>().RefreshBallImage();
+			//canvasHome.GetComponent<CanvasHomeManager>().RefreshBallImage();
 		}
 
 	}

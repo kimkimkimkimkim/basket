@@ -13,7 +13,7 @@ public class drawPhysicsLine : MonoBehaviour
 	private GameObject camera;
 	private Vector3 touchPos;
 	private int count = 0;
-	private int maxLineNum = 4;
+	private int maxLineNum = 6;
 	private bool canDraw = false;
 	private bool isCreated = false;
 
@@ -27,15 +27,19 @@ public class drawPhysicsLine : MonoBehaviour
 
 	void drawLine(){
 
+		int lineNum = line.transform.childCount;
+
 		if(Input.GetMouseButtonDown(0))
 		{
+			if(lineNum == maxLineNum)return;
 			touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			touchPos.z=0;
+			if(lineNum == maxLineNum - 1)maxLineNum++;
 		}
 
 		if(Input.GetMouseButton(0))
 		{
-
+			if(lineNum == maxLineNum )return;
 			Vector3 startPos = touchPos;
 			Vector3 endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			endPos.z=0;
@@ -57,6 +61,7 @@ public class drawPhysicsLine : MonoBehaviour
 
 		if (Input.GetMouseButtonUp (0) && isCreated) {
 
+			if(lineNum == maxLineNum )return;
 			if(count == 0)camera.GetComponent<GameManager>().GameStart();
 
 			GameObject obj = line.transform.Find ("Line" + count.ToString ()).gameObject;
@@ -68,7 +73,8 @@ public class drawPhysicsLine : MonoBehaviour
 			canDraw = false;
 			isCreated = false;
 
-			CheckLineNum();
+			if(lineNum == maxLineNum - 1)maxLineNum=6;
+			//CheckLineNum();
 		}
 	}
 

@@ -34,7 +34,10 @@ public class FirebaseManager : MonoBehaviour {
 		    // Firebase Unity SDK is not safe to use here.
 		  }
 		});
+	}
 
+	private void Update(){
+		Debug.Log("ref:"+reference);
 	}
 
 	public class User {
@@ -51,13 +54,23 @@ public class FirebaseManager : MonoBehaviour {
 	}
 
 	public void writeNewScore(string userId, string name, int score) {
+		// Set up the Editor before calling into the realtime database.
+		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com/");
+
+		// Get the root reference location of the database.
+		reference = FirebaseDatabase.DefaultInstance.RootReference;
     User user = new User(name,score);
     string json = JsonUtility.ToJson(user);
-		Debug.Log(json);
+		Debug.Log("reference:"+reference);
     reference.Child("ranking").Child(userId).SetRawJsonValueAsync(json);
 	}
 
 	public void getRanking(){
+		// Set up the Editor before calling into the realtime database.
+		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com/");
+
+		// Get the root reference location of the database.
+		reference = FirebaseDatabase.DefaultInstance.RootReference;
 		//RealtileDataBaseから現在のランキングを取得
 		//bossNoのノードからtimeで昇順ソートして最大10件を取る（非同期)
 		reference.Child("ranking").OrderByChild("score").GetValueAsync().ContinueWith(task =>{

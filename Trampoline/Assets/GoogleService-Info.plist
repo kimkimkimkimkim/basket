@@ -7,9 +7,9 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>713606047975-4ededimuodpop1f1c0g5qahqbpb3ntmc.apps.googleusercontent.com</string>
+	<string>713606047975-1ovkqio2q2n5td0sd42s5li7qgq6q3ic.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.713606047975-4ededimuodpop1f1c0g5qahqbpb3ntmc</string>
+	<string>com.googleusercontent.apps.713606047975-1ovkqio2q2n5td0sd42s5li7qgq6q3ic</string>
 	<key>API_KEY</key>
 	<string>AIzaSyABvBAv6XYzenas7LUzAjnzWrG_EYkGA10</string>
 	<key>GCM_SENDER_ID</key>
@@ -17,7 +17,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.kimsangwoo.Trampoline</string>
+	<string>com.Lame.BoundBasket</string>
 	<key>PROJECT_ID</key>
 	<string>trampolinebasket</string>
 	<key>STORAGE_BUCKET</key>
@@ -33,7 +33,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:713606047975:ios:f67f4ffe93adbe7a</string>
+	<string>1:713606047975:ios:e15af3973e17d282</string>
 	<key>DATABASE_URL</key>
 	<string>https://trampolinebasket.firebaseio.com</string>
 </dict>

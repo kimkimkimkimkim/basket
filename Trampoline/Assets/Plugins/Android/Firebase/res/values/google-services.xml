@@ -6,6 +6,6 @@
   <string name="project_id" translatable="false">trampolinebasket</string>
   <string name="google_api_key" translatable="false">AIzaSyBUr7xPjgnApz_iLwlPDNXDR2Df09UTX0M</string>
   <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBUr7xPjgnApz_iLwlPDNXDR2Df09UTX0M</string>
-  <string name="google_app_id" translatable="false">1:713606047975:android:f67f4ffe93adbe7a</string>
+  <string name="google_app_id" translatable="false">1:713606047975:android:e15af3973e17d282</string>
   <string name="default_web_client_id" translatable="false">713606047975-eg7865s0nlbnmvomr5mq5b2nplo08691.apps.googleusercontent.com</string>
 </resources>
