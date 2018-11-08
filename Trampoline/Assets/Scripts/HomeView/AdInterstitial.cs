@@ -12,12 +12,12 @@ public class AdInterstitial : MonoBehaviour {
 
 	void Awake() {
 
-		ADGUnitySDK3.IOSInterLocationID = "72702";
-		ADGUnitySDK3.AndroidInterLocationID = "72703";
+		ADGUnitySDK3.IOSInterLocationID = "48547";
+		ADGUnitySDK3.AndroidInterLocationID = "48547";
 		ADGUnitySDK3.BackgroundType = 3;
 		ADGUnitySDK3.CloseButtonType = 3;
-		ADGUnitySDK3.Span = 2;
-		ADGUnitySDK3.IsPercentage = false;
+		ADGUnitySDK3.Span = 70;
+		ADGUnitySDK3.IsPercentage = true;
 		ADGUnitySDK3.IsPreventAccidentClick = false;
 		ADGUnitySDK3.MessageObjName = "";
 

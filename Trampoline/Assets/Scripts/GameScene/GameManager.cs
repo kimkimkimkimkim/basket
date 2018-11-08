@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour {
 	private float feverTime = 15.0f;
 	private bool gamefinish = false;
 	private bool isLeft = true;
+	private bool isFirstFever = true;
 	private int point = 0;
 	private int ballCount = 0;
 	private int feverCount = 0;
@@ -143,7 +144,7 @@ public class GameManager : MonoBehaviour {
 	private void CreateBall(){
 
 		ballCount++;
-		if(ballCount % 5 == 0)timeSpan = (timeSpan-0.2f > 2) ? timeSpan - 0.2f : 2;
+		if(ballCount % 3 == 0)timeSpan = (timeSpan-0.2f > 2) ? timeSpan - 0.2f : 2;
 
 		GameObject ball = (GameObject)Instantiate(ballPrefab);
 		ball.transform.SetParent(ballField.transform);
@@ -313,7 +314,15 @@ public class GameManager : MonoBehaviour {
 
 		feverCount = 0;
 
-		maxFeverCount++;
+		if(isFirstFever){
+			for(int i=0;i<10;i++){
+				maxFeverCount++;
+			}
+			isFirstFever=false;
+		}
+		for(int i=0;i<5;i++){
+			maxFeverCount++;
+		}
 		RefreshFeverSlider();
 
 		isLeft = true;

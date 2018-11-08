@@ -14,7 +14,8 @@ public class FirebaseManager : MonoBehaviour {
 
 	void Start() {
 		// Set up the Editor before calling into the realtime database.
-		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com/");
+		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com");
+		
 
 		// Get the root reference location of the database.
 		reference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -36,10 +37,6 @@ public class FirebaseManager : MonoBehaviour {
 		});
 	}
 
-	private void Update(){
-		Debug.Log("ref:"+reference);
-	}
-
 	public class User {
     public string username;
     public int score;
@@ -55,7 +52,6 @@ public class FirebaseManager : MonoBehaviour {
 
 	public void writeNewScore(string userId, string name, int score) {
 		// Set up the Editor before calling into the realtime database.
-		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com/");
 
 		// Get the root reference location of the database.
 		reference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -67,7 +63,6 @@ public class FirebaseManager : MonoBehaviour {
 
 	public void getRanking(){
 		// Set up the Editor before calling into the realtime database.
-		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://trampolinebasket.firebaseio.com/");
 
 		// Get the root reference location of the database.
 		reference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -95,8 +90,8 @@ public class FirebaseManager : MonoBehaviour {
 						//Textに反映
 						GameObject row = rankingSpace.transform.GetChild(rank).gameObject;
 						row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (rank).ToString(); //順位
-						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
-						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
+						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = score; //スコア
+						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = name; //名前
 						if(userid == id){
 							//自分の時はハイライト
 							row.GetComponent<Image>().enabled = true;
@@ -110,8 +105,8 @@ public class FirebaseManager : MonoBehaviour {
 						//Textに反映
 						GameObject row = rankingSpace.transform.GetChild(10).gameObject;
 						row.transform.GetChild(0).gameObject.GetComponent<Text>().text = (rank).ToString(); //順位
-						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = score; //スコア
-						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = name; //名前
+						row.transform.GetChild(2).gameObject.GetComponent<Text>().text = score; //スコア
+						row.transform.GetChild(1).gameObject.GetComponent<Text>().text = name; //名前
 						row.GetComponent<Image>().enabled = true;
 						break;
 					}
