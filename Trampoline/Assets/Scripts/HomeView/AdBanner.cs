@@ -27,6 +27,16 @@ public class AdBanner : MonoBehaviour {
         ADGUnitySDK.Scale = scale;
         ADGUnitySDK.MessageObjName = "";
         AdBannerShowFlag = true;
+        //プラットフォーム別の対応
+        #if UNITY_EDITOR
+        
+        #elif UNITY_IPHONE
+        
+        #else 
+            ADGUnitySDK.IsIOSEasyPosition = false;
+            ADGUnitySDK.Vertical = "BOTTOM";
+            ADGUnitySDK.Horizontal = "CENTER";
+        #endif
 	}
 
     void Update(){

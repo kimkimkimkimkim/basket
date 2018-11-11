@@ -16,34 +16,49 @@ public class BallFieldManager : MonoBehaviour {
 	private int columnNum = 3;
 	private int buttonCount = -1;
 	private int selectedBall;
+	private bool isJapanese;
 
 	// Use this for initialization
 	void Start () {
+		string deviceLanguage = Application.systemLanguage.ToString();
+		Debug.Log("deviceLanguage"+deviceLanguage);
+		if(deviceLanguage == "Japanese"){
+			isJapanese=true;
+		}  else if (deviceLanguage == "English"){
+			isJapanese=false;
+		} else {
+			isJapanese=false;
+		}
 		CreateBallField();
 		//プレイ回数
 		for(int i=1;i<4;i++){
 			int num = camera.GetComponent<GameManager>().playCountCondition[i-1];
 			string str = string.Format("プレイ回数\n{0}回突破",num);
+			if(!isJapanese)str = string.Format("Play {0} games total",num);
 			strCondition[i] = str;
 		}
 		//スコア
 		for(int i=4;i<7;i++){
 			int num = camera.GetComponent<GameManager>().scoreCondition[i-4];
 			string str = string.Format("ベストスコア\n{0}以上",num);
+			if(!isJapanese)str = string.Format("Score {0} or more points",num);
 			strCondition[i] = str;
 		}
 		//ログイン日数
 		for(int i=7;i<10;i++){
 			int num = camera.GetComponent<GameManager>().logindayseCondition[i-7];
 			string str = string.Format("ログイン日数\n{0}日以上",num);
+			if(!isJapanese)str = string.Format("Play the game \n {0} days",num);
 			strCondition[i] = str;
 		}
 		//動画報酬
 		int rnum = camera.GetComponent<GameManager>().rewordCondition;
 		string rstr = string.Format("フィーバー\n{0}回以上",rnum);
+		if(!isJapanese)rstr = string.Format("Achieve {0} FeverTime",rnum);
 		strCondition[10] = rstr;
 		//全スキン開放
 		strCondition[11] = "全部のスキン開放";
+		if(!isJapanese)strCondition[11] = "Complete all challenges";
 
 	}
 

@@ -12,8 +12,8 @@ public class AdInterstitial : MonoBehaviour {
 
 	void Awake() {
 
-		ADGUnitySDK3.IOSInterLocationID = "48547";
-		ADGUnitySDK3.AndroidInterLocationID = "48547";
+		ADGUnitySDK3.IOSInterLocationID = "73204";
+		ADGUnitySDK3.AndroidInterLocationID = "73203";
 		ADGUnitySDK3.BackgroundType = 3;
 		ADGUnitySDK3.CloseButtonType = 3;
 		ADGUnitySDK3.Span = 70;
@@ -43,7 +43,7 @@ public class AdInterstitial : MonoBehaviour {
 
 	public void InitAd() {
         Debug.Log("Init");
-				ADGUnitySDK3.initInterADG();
+		ADGUnitySDK3.initInterADG();
 				/*
         // iPhoneX対応
         if (Screen.width == 1125 && Screen.height == 2436) {
